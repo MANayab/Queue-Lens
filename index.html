@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QueueLens – Free Support Ticket SLA &amp; Backlog Analyzer (CSV)</title>
+<meta name="description" content="Free, private browser tool that analyzes helpdesk CSV exports: SLA breaches, backlog aging and agent workload. Works with Zendesk, Freshdesk and Jira. No upload.">
+<meta name="keywords" content="support ticket analyzer, SLA calculator, helpdesk CSV analysis, ticket backlog report, first response time, resolution time, agent workload, Zendesk CSV export, Freshdesk report, customer support analytics, free SLA report, privacy-first analytics">
+<meta name="author" content="MANayab">
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<meta name="theme-color" content="#0b1730">
+<link rel="canonical" href="https://manayab.github.io/Queue-Lens/">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="sitemap" type="application/xml" href="sitemap.xml">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="QueueLens">
+<meta property="og:title" content="QueueLens – Free Support Ticket SLA &amp; Backlog Analyzer">
+<meta property="og:description" content="Turn ticket CSV exports into SLA, backlog and workload reports. 100% in your browser – your data is never uploaded.">
+<meta property="og:url" content="https://manayab.github.io/Queue-Lens/">
+<meta property="og:image" content="https://manayab.github.io/Queue-Lens/og-image.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="QueueLens support ticket analytics">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="QueueLens – Free Support Ticket SLA &amp; Backlog Analyzer">
+<meta name="twitter:description" content="Private, browser-based SLA, backlog aging and workload reports from helpdesk CSV exports.">
+<meta name="twitter:image" content="https://manayab.github.io/Queue-Lens/og-image.png">
+<link rel="alternate" type="text/plain" href="llms.txt" title="LLM summary">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"WebSite","@id":"https://manayab.github.io/Queue-Lens/#site","name":"QueueLens","url":"https://manayab.github.io/Queue-Lens/","inLanguage":"en"},
+{"@type":"WebApplication","@id":"https://manayab.github.io/Queue-Lens/#app","name":"QueueLens","url":"https://manayab.github.io/Queue-Lens/","applicationCategory":"BusinessApplication","applicationSubCategory":"Customer Support Analytics","operatingSystem":"Any (modern web browser)","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Free browser-based analyzer that turns helpdesk ticket CSV exports into SLA estimates, backlog aging, agent workload and data-quality reports without uploading data.","featureList":["CSV import with column mapping","Duplicate and invalid timestamp detection","Backlog aging buckets","Calendar-hour SLA estimates by priority","Agent workload indicators","Filtered CSV export with formula-injection protection","Printable management report","Local-only processing"],"author":{"@type":"Person","name":"MANayab","url":"https://github.com/MANayab"},"sameAs":["https://github.com/MANayab/Queue-Lens"]},
+{"@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"What is QueueLens?","acceptedAnswer":{"@type":"Answer","text":"QueueLens is a free, browser-based tool that analyzes support-ticket CSV exports and reports SLA estimates, backlog aging and agent workload."}},
+{"@type":"Question","name":"Is my ticket data uploaded to a server?","acceptedAnswer":{"@type":"Answer","text":"No. QueueLens has no backend. Your CSV is processed in your browser memory and is not stored or transmitted."}},
+{"@type":"Question","name":"Which helpdesk exports does QueueLens support?","acceptedAnswer":{"@type":"Answer","text":"Any CSV export, including Zendesk, Freshdesk, Jira Service Management and Help Scout, because you can map columns manually."}},
+{"@type":"Question","name":"How does QueueLens calculate SLA?","acceptedAnswer":{"@type":"Answer","text":"It subtracts the created timestamp from the first-response or resolved timestamp in calendar hours and compares the result with your priority targets. Open tickets use the current time. Results are estimates, not official helpdesk SLA values."}},
+{"@type":"Question","name":"How are backlog ages classified?","acceptedAnswer":{"@type":"Answer","text":"Unresolved tickets are Fresh (0-24 hours), Aging (24-48), At risk (48-72) or Critical (72+ hours) based on creation time."}},
+{"@type":"Question","name":"Is QueueLens free?","acceptedAnswer":{"@type":"Answer","text":"Yes. It is free, requires no account and is hosted as a static site on GitHub Pages."}}]}]}
+</script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top"><a class="logo" href="./">◉ QueueLens</a><nav><a href="#how">How it works</a><a href="#faq">FAQ</a><a href="https://github.com/MANayab/Queue-Lens">GitHub</a></nav></header>
+<main>
+<section class="hero">
+<h1>Your support tickets. Clear operational insights.</h1>
+<p>Analyze helpdesk CSV exports, identify SLA risks, understand backlog aging and measure team workload — <strong>without uploading your data</strong>.</p>
+<div id="upload" class="card">
+<label class="btn" for="file">Analyze your tickets (CSV)</label>
+<input id="file" type="file" accept=".csv,text/csv" hidden>
+<button id="sampleBtn" class="btn ghost" type="button">Explore sample report</button>
+<p id="msg" role="status" class="muted">Processed locally in your browser. Max 10 MB / 50,000 rows.</p>
+<noscript><p class="warn">QueueLens needs JavaScript enabled to analyze files locally.</p></noscript>
+</div>
+</section>
+
+<section id="map" class="card" hidden>
+<h2>Map your columns</h2>
+<p class="muted">We suggested matches. Ticket ID and Created are required. Never guessed: confirm your date format.</p>
+<div id="mapGrid" class="grid"></div>
+<label>Date format <select id="dfmt"><option value="iso">ISO (2026-03-31 14:05)</option><option value="dmy">DD/MM/YYYY</option><option value="mdy">MM/DD/YYYY</option></select></label>
+<button id="go" class="btn" type="button">Build report</button>
+</section>
+
+<section id="dash" hidden>
+<div class="bar">
+<select id="fs" aria-label="Status"></select><select id="fp" aria-label="Priority"></select><select id="fa" aria-label="Assignee"></select>
+<input id="q" type="search" placeholder="Search ticket ID…" aria-label="Search">
+<button id="exp" class="btn" type="button">Export CSV</button><button id="prt" class="btn ghost" type="button">Print report</button><button id="clr" class="btn ghost" type="button">Clear data</button>
+</div>
+<p class="muted">Reference time: <span id="ref"></span>. Figures are <strong>QueueLens estimates</strong> in calendar hours: no business hours, holidays, pending-clock pauses or SLA-cycle reconstruction. Not official Zendesk/Freshdesk SLA values.</p>
+<div id="kpis" class="kpis"></div>
+<div class="two">
+<div class="card"><h2>Backlog aging</h2><div id="age"></div></div>
+<div class="card"><h2>SLA targets (hours)</h2><div id="slaCfg"></div></div>
+</div>
+<div class="card"><h2>SLA results</h2><div class="scroll" id="sla"></div></div>
+<div class="card"><h2>Team workload</h2><p class="muted">Workload indicators only, not performance rankings: counts ignore complexity and quality.</p><div class="scroll" id="work"></div></div>
+<div class="card"><h2>Data quality</h2><div id="qual"></div></div>
+<div class="card"><h2>Tickets <small id="cnt" class="muted"></small></h2><div class="scroll" id="tbl"></div></div>
+</section>
+
+<section id="how" class="card"><h2>How QueueLens works</h2>
+<ol><li>Export tickets as CSV from Zendesk, Freshdesk, Jira Service Management, Help Scout or any helpdesk.</li><li>Open QueueLens and select the file; confirm the suggested column mapping.</li><li>Set response and resolution targets per priority.</li><li>Review SLA status, backlog aging, workload and data quality, then export a filtered CSV or print the report.</li></ol>
+<p>Privacy: your ticket data is processed locally in your browser. QueueLens does not upload your CSV files to an application server or store your ticket records in a cloud database, and it uses no analytics or tracking.</p></section>
+
+<section id="faq" class="card"><h2>Frequently asked questions</h2>
+<h3>What is QueueLens?</h3><p>A free, browser-based tool that analyzes support-ticket CSV exports and reports SLA estimates, backlog aging and agent workload.</p>
+<h3>Is my ticket data uploaded to a server?</h3><p>No. There is no backend; the CSV stays in browser memory and is released when you clear data or close the tab.</p>
+<h3>Which helpdesk exports are supported?</h3><p>Any CSV export. Columns are auto-suggested and can be mapped manually, so Zendesk, Freshdesk, Jira Service Management and Help Scout exports work.</p>
+<h3>How is SLA calculated?</h3><p>Response = first response − created; resolution = resolved − created, both in calendar hours, compared to your priority targets. Open tickets use the current time. Statuses: Met, Breached, On track, Overdue, Not measurable, Needs review.</p>
+<h3>How is backlog aging classified?</h3><p>Unresolved tickets: Fresh 0–24 h, Aging 24–48 h, At risk 48–72 h, Critical 72+ h.</p>
+<h3>Is it free?</h3><p>Yes. No account, no cost, hosted on GitHub Pages.</p></section>
+</main>
+<footer><p>QueueLens · free, open-source, privacy-first ticket analytics · <a href="https://github.com/MANayab/Queue-Lens">Source on GitHub</a> · <a href="llms.txt">llms.txt</a></p></footer>
+<script src="app.js" defer></script>
+</body>
+</html>

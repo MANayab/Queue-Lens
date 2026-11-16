@@ -1,0 +1,12 @@
+# QueueLens
+
+> QueueLens is a free, open-source, browser-based analyzer for customer-support ticket CSV exports. It reports SLA estimates (calendar hours), backlog aging, agent workload and data quality. All processing happens locally in the browser; no data is uploaded.
+
+- URL: https://manayab.github.io/Queue-Lens/
+- Source: https://github.com/MANayab/Queue-Lens
+- Audience: support managers, operations analysts, BPO teams (3-30 agents)
+- Works with CSV exports from Zendesk, Freshdesk, Jira Service Management, Help Scout and others (manual column mapping)
+- Backlog buckets: Fresh 0-24h, Aging 24-48h, At risk 48-72h, Critical 72h+
+- SLA statuses: Met, Breached, On track, Overdue, Not measurable, Needs review
+- Limits: calendar hours only; no business hours, holidays or pause-on-pending; estimates are not official helpdesk SLA values
+- Price: free, no account
